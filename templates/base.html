@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or 'Shadmer Beauty Shop' }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  {% if current_user.id %}
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div>
+        <div class="brand-badge">✨</div>
+        <h1>Shadmer</h1>
+        <p>Beauty shop manager</p>
+      </div>
+      <nav class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('sale') }}">Record Sale</a>
+        <a href="{{ url_for('restock') }}">Restock</a>
+        <a href="{{ url_for('inventory') }}">Inventory</a>
+        <a href="{{ url_for('daily_report') }}">Daily Report</a>
+        {% if current_user.role == 'admin' %}
+        <a href="{{ url_for('users') }}">Users</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+      </nav>
+      <div class="sidebar-user">
+        <strong>{{ current_user.full_name }}</strong>
+        <span>{{ current_user.role|title }}</span>
+      </div>
+    </aside>
+    <main class="content">
+      <header class="topbar">
+        <div>
+          <h2>{{ page_title or 'Shadmer Shop' }}</h2>
+          <p>{{ page_subtitle or 'Easy sales and inventory for everyday use.' }}</p>
+        </div>
+      </header>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-stack">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  {% else %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="login-flashes">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block login_content %}{% endblock %}
+  {% endif %}
+</body>
+</html>

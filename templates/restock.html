@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% set page_title = 'Restock' %}
+{% set page_subtitle = 'Add new stock quickly when items arrive.' %}
+{% block content %}
+<section class="panel max-700">
+  <div class="panel-head"><h3>Restock Product</h3></div>
+  <form method="post" class="form-grid roomy-form">
+    <label>Choose product</label>
+    <select name="product_id" required>
+      <option value="">Select product</option>
+      {% for p in products %}
+      <option value="{{ p.id }}">{{ p.product_name }} — Current stock: {{ p.stock_qty }}</option>
+      {% endfor %}
+    </select>
+    <label>Quantity added</label>
+    <input name="quantity" type="number" min="1" required>
+    <label>Cost price</label>
+    <input name="cost_price" type="number" min="0" step="0.01" required>
+    <button class="btn btn-primary btn-xl" type="submit">Update Stock</button>
+  </form>
+</section>
+{% endblock %}

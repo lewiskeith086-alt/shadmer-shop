@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% set page_title = 'Record Sale' %}
+{% set page_subtitle = 'Large buttons and simple steps for attendants.' %}
+{% block content %}
+<section class="panel max-700">
+  <div class="panel-head"><h3>New Sale</h3></div>
+  <form method="post" class="form-grid roomy-form">
+    <label>Choose product</label>
+    <select name="product_id" required>
+      <option value="">Select product</option>
+      {% for p in products %}
+      <option value="{{ p.id }}">{{ p.product_name }} — Stock: {{ p.stock_qty }} — Price: {{ p.selling_price|money }}</option>
+      {% endfor %}
+    </select>
+    <label>Quantity</label>
+    <input name="quantity" type="number" min="1" value="1" required>
+    <label>Unit price</label>
+    <input name="unit_price" type="number" min="0" step="0.01" required>
+    <label>Payment method</label>
+    <div class="button-grid">
+      <label class="radio-pill"><input type="radio" name="payment_method" value="Cash" checked><span>Cash</span></label>
+      <label class="radio-pill"><input type="radio" name="payment_method" value="MoMo"><span>MoMo</span></label>
+      <label class="radio-pill"><input type="radio" name="payment_method" value="Card"><span>Card</span></label>
+      <label class="radio-pill"><input type="radio" name="payment_method" value="Transfer"><span>Transfer</span></label>
+    </div>
+    <button class="btn btn-primary btn-xl" type="submit">Save Sale</button>
+  </form>
+</section>
+{% endblock %}

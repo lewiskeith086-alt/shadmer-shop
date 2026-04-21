@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% set page_title = 'Users' %}
+{% set page_subtitle = 'Create admin and attendant logins.' %}
+{% block content %}
+<div class="two-col uneven">
+  <section class="panel max-520">
+    <div class="panel-head"><h3>Add User</h3></div>
+    <form method="post" class="form-grid form-compact">
+      <label>Full name</label><input name="full_name" required>
+      <label>Username</label><input name="username" required>
+      <label>Password</label><input name="password" type="password" required>
+      <label>Role</label>
+      <select name="role">
+        <option value="attendant">Attendant</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button class="btn btn-primary" type="submit">Create User</button>
+    </form>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h3>Current Users</h3></div>
+    <table>
+      <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Created</th></tr></thead>
+      <tbody>
+      {% for row in users %}
+        <tr>
+          <td>{{ row.full_name }}</td>
+          <td>{{ row.username }}</td>
+          <td>{{ row.role|title }}</td>
+          <td>{{ 'Active' if row.is_active else 'Inactive' }}</td>
+          <td>{{ row.created_at }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endblock %}

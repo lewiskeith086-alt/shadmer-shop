@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% set page_title = 'Daily Report' %}
+{% set page_subtitle = 'View the day\'s sales and export it for records.' %}
+{% block content %}
+<section class="panel">
+  <div class="panel-head wrap-head">
+    <h3>Daily Summary</h3>
+    <form method="get" class="inline-search">
+      <input type="date" name="report_date" value="{{ report_date }}">
+      <button class="btn btn-soft" type="submit">Load</button>
+      <a class="btn btn-primary" href="{{ url_for('export_daily_report', report_date=report_date) }}">Export CSV</a>
+    </form>
+  </div>
+  <div class="kpi-grid small-gap">
+    <section class="kpi-card pink"><span>Total Sales</span><strong>{{ summary.total_sales|money }}</strong></section>
+    <section class="kpi-card lilac"><span>Items Sold</span><strong>{{ summary.items_sold }}</strong></section>
+    <section class="kpi-card peach"><span>Number of Sales</span><strong>{{ summary.sales_count }}</strong></section>
+    <section class="kpi-card cream"><span>Restock Cost</span><strong>{{ summary.total_restock|money }}</strong></section>
+  </div>
+</section>
+<div class="two-col">
+  <section class="panel">
+    <div class="panel-head"><h3>Sales</h3></div>
+    <table>
+      <thead><tr><th>Time</th><th>Product</th><th>Qty</th><th>Total</th><th>By</th></tr></thead>
+      <tbody>
+      {% for row in sales_rows %}
+        <tr><td>{{ row.sale_date }}</td><td>{{ row.product_name }}</td><td>{{ row.quantity }}</td><td>{{ row.total_price|money }}</td><td>{{ row.attendant_name }}</td></tr>
+      {% else %}
+        <tr><td colspan="5">No sales for this date.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h3>Restocks</h3></div>
+    <table>
+      <thead><tr><th>Time</th><th>Product</th><th>Qty</th><th>Total Cost</th><th>By</th></tr></thead>
+      <tbody>
+      {% for row in restock_rows %}
+        <tr><td>{{ row.purchase_date }}</td><td>{{ row.product_name }}</td><td>{{ row.quantity }}</td><td>{{ row.total_cost|money }}</td><td>{{ row.attendant_name }}</td></tr>
+      {% else %}
+        <tr><td colspan="5">No restocks for this date.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endblock %}

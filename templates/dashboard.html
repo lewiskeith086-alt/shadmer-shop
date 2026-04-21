@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% set page_title = 'Dashboard' %}
+{% set page_subtitle = 'See today\'s activity at a glance.' %}
+{% block content %}
+<div class="kpi-grid">
+  <section class="kpi-card pink"><span>Total Sales</span><strong>{{ kpis.total_sales|money }}</strong></section>
+  <section class="kpi-card lilac"><span>Today Sales</span><strong>{{ kpis.today_sales|money }}</strong></section>
+  <section class="kpi-card peach"><span>Products</span><strong>{{ kpis.products }}</strong></section>
+  <section class="kpi-card rose"><span>Stock Units</span><strong>{{ kpis.stock_units }}</strong></section>
+  <section class="kpi-card cream"><span>Items Sold</span><strong>{{ kpis.sold_units }}</strong></section>
+</div>
+<div class="two-col">
+  <section class="panel">
+    <div class="panel-head"><h3>Low Stock Alert</h3></div>
+    <table>
+      <thead><tr><th>Product</th><th>Stock</th><th>Reorder</th></tr></thead>
+      <tbody>
+      {% for row in low_stock %}
+        <tr><td>{{ row.product_name }}</td><td>{{ row.stock_qty }}</td><td>{{ row.reorder_level }}</td></tr>
+      {% else %}
+        <tr><td colspan="3">No low-stock products right now.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h3>Recent Sales</h3></div>
+    <table>
+      <thead><tr><th>Time</th><th>Product</th><th>Qty</th><th>Total</th><th>By</th></tr></thead>
+      <tbody>
+      {% for row in recent_sales %}
+        <tr>
+          <td>{{ row.sale_date }}</td><td>{{ row.product_name }}</td><td>{{ row.quantity }}</td>
+          <td>{{ row.total_price|money }}</td><td>{{ row.attendant_name }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">No sales recorded yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endblock %}

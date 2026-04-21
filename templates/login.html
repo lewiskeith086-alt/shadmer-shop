@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block login_content %}
+<div class="login-page">
+  <div class="login-card">
+    <div class="brand-mini">🌸</div>
+    <h1>Shadmer Shop Login</h1>
+    <p>Simple access for admin and attendants.</p>
+    <form method="post" class="form-grid">
+      <label>Username</label>
+      <input name="username" placeholder="Enter username" required>
+      <label>Password</label>
+      <input name="password" type="password" placeholder="Enter password" required>
+      <button class="btn btn-primary btn-large" type="submit">Login</button>
+    </form>
+    <div class="demo-box">
+      <strong>WELCOME TO SHADMER COSMETICS PORTAL</strong>
+    </div>
+  </div>
+</div>
+{% endblock %}
