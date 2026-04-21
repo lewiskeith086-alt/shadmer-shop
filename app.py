@@ -126,20 +126,40 @@ def import_inventory_from_excel(conn, xlsx_path):
         if expiry_date:
             expiry_text = expiry_date.strftime("%Y-%m-%d") if hasattr(expiry_date, "strftime") else str(expiry_date)
         conn.execute(text("""
-            INSERT OR IGNORE INTO inventory
-            (product_name, category, cost_price, selling_price, stock_qty, reorder_level, expiry_date, created_at, updated_at)
-            VALUES (:product_name, :category, :cost_price, :selling_price, :stock_qty, :reorder_level, :expiry_date, :created_at, :updated_at)
-        """), {
-            "product_name": product_name,
-            "category": (str(category).strip() if category else "Beauty"),
-            "cost_price": float(cost_price or 0),
-            "selling_price": float(selling_price or 0),
-            "stock_qty": int(stock_qty or 0),
-            "reorder_level": int(reorder_level or 0),
-            "expiry_date": expiry_text,
-            "created_at": now,
-            "updated_at": now,
-        })
+    INSERT INTO inventory (
+        product_name,
+        category,
+        cost_price,
+        selling_price,
+        stock_qty,
+        reorder_level,
+        expiry_date,
+        created_at,
+        updated_at
+    )
+    VALUES (
+        :product_name,
+        :category,
+        :cost_price,
+        :selling_price,
+        :stock_qty,
+        :reorder_level,
+        :expiry_date,
+        :created_at,
+        :updated_at
+    )
+    ON CONFLICT (product_name) DO NOTHING
+"""), {
+    "product_name": product_name,
+    "category": str(category).strip() if category else "Beauty",
+    "cost_price": float(cost_price or 0),
+    "selling_price": float(selling_price or 0),
+    "stock_qty": int(stock_qty or 0),
+    "reorder_level": int(reorder_level or 0),
+    "expiry_date": expiry_text,
+    "created_at": now,
+    "updated_at": now,
+  })
 
 
 def require_login(view):
