@@ -38,7 +38,7 @@ def init_db():
     with engine.begin() as conn:
         conn.execute(text("""
             CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY,
+                id SERIAL PRIMARY KEY,
                 username TEXT UNIQUE NOT NULL,
                 full_name TEXT NOT NULL,
                 password_hash TEXT NOT NULL,
@@ -518,5 +518,6 @@ def health():
 
 init_db()
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=True)
+if name == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
