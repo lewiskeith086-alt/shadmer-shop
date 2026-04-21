@@ -49,7 +49,7 @@ def init_db():
         """))
         conn.execute(text("""
             CREATE TABLE IF NOT EXISTS inventory (
-                id INTEGER PRIMARY KEY,
+                id SERIAL PRIMARY KEY,
                 product_name TEXT UNIQUE NOT NULL,
                 category TEXT,
                 cost_price REAL DEFAULT 0,
@@ -63,7 +63,7 @@ def init_db():
         """))
         conn.execute(text("""
             CREATE TABLE IF NOT EXISTS sales (
-                id INTEGER PRIMARY KEY,
+                id SERIAL PRIMARY KEY,
                 sale_date TEXT NOT NULL,
                 product_id INTEGER NOT NULL,
                 quantity INTEGER NOT NULL,
@@ -76,7 +76,7 @@ def init_db():
         """))
         conn.execute(text("""
             CREATE TABLE IF NOT EXISTS purchases (
-                id INTEGER PRIMARY KEY,
+                id SERIAL PRIMARY KEY,
                 purchase_date TEXT NOT NULL,
                 product_id INTEGER NOT NULL,
                 quantity INTEGER NOT NULL,
@@ -271,18 +271,37 @@ def inventory():
                 raise ValueError("Product name is required.")
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             db.execute(text("""
-                INSERT INTO inventory (product_name, category, cost_price, selling_price, stock_qty, reorder_level, expiry_date, created_at, updated_at)
-                VALUES (:product_name, :category, :cost_price, :selling_price, :stock_qty, :reorder_level, '', :created_at, :updated_at)
-            """), {
-                "product_name": product_name,
-                "category": category,
-                "cost_price": cost_price,
-                "selling_price": selling_price,
-                "stock_qty": stock_qty,
-                "reorder_level": reorder_level,
-                "created_at": now,
-                "updated_at": now,
-            })
+    INSERT INTO inventory (
+        product_name,
+        category,
+        cost_price,
+        selling_price,
+        stock_qty,
+        reorder_level,
+        created_at,
+        updated_at
+    )
+    VALUES (
+        :product_name,
+        :category,
+        :cost_price,
+        :selling_price,
+        :stock_qty,
+        :reorder_level,
+        :created_at,
+        :updated_at
+    )
+    ON CONFLICT (product_name) DO NOTHING
+"""), {
+    "product_name": product_name,
+    "category": category,
+    "cost_price": cost_price,
+    "selling_price": selling_price,
+    "stock_qty": stock_qty,
+    "reorder_level": reorder_level,
+    "created_at": now,
+    "updated_at": now,
+    })
             db.commit()
             flash(f"{product_name} added to inventory.", "success")
             return redirect(url_for("inventory"))
