@@ -2,8 +2,10 @@ services:
   - type: web
     name: shadmer-shop
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    runtime: python-3.11
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
     autoDeploy: true
     envVars:
       - key: SECRET_KEY
